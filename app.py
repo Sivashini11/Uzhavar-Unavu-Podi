@@ -1,3 +1,5 @@
+import razorpay
+import os
 import os
 import sqlite3
 import uuid
@@ -8,6 +10,12 @@ from flask import Flask, render_template, request, redirect, session
 app = Flask(__name__)
 app.secret_key = "uzhavar_unavu_podi_2026"
 
+client = razorpay.Client(
+    auth=(
+        os.getenv("RAZORPAY_KEY_ID"),
+        os.getenv("RAZORPAY_KEY_SECRET")
+    )
+)
 # -------------------------
 # Product Data
 # -------------------------
