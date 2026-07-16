@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Checkout</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="checkout-container">
+
+    <h1>Checkout</h1>
+
+    <div id="checkout-items"></div>
+
+    <h2>Total : ₹<span id="checkout-total">0</span></h2>
+
+    <hr>
+
+    <h2>Customer Details</h2>
+
+    <form action="/payment"></form>
+
+        <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required>
+
+        <input
+            type="text"
+            name="phone"
+            placeholder="Phone Number"
+            required>
+
+        <textarea
+            name="address"
+            placeholder="Address"
+            required></textarea>
+
+        <input
+            type="hidden"
+            name="amount"
+            id="amount">
+
+      <form action="/payment">
+    <button type="submit">
+        Proceed to Payment
+    </button>
+</form>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/checkout.js') }}"></script>
+
+</body>
+
+</html>

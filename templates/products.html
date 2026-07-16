@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Our Products</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<h1 style="text-align:center;color:#2E7D32;margin:30px;">
+🌿 Our Products
+</h1>
+
+<div class="product-grid">
+
+{% for product in products %}
+
+<div class="product">
+
+    <img src="{{ url_for('static', filename='images/' + product.image) }}"
+         alt="{{ product.name }}">
+
+    <h2>{{ product.name }}</h2>
+
+    <label>Select Weight</label>
+
+    <select class="weight-select">
+
+        {% for weight, price in product.prices.items() %}
+
+        <option>
+
+            {{ weight }} g - ₹{{ price }}
+
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+    <br><br>
+
+    <a href="/order/{{ product.id }}">
+
+        <button class="order-btn">
+
+            Order Now
+
+        </button>
+
+    </a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+
+</html>

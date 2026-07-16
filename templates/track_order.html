@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Track Order</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 style="text-align:center;color:green;">
+Track Your Order
+</h1>
+
+<form action="/track" method="POST">
+
+<input
+type="text"
+name="order_id"
+placeholder="Enter Order ID"
+required
+style="width:350px;padding:12px;">
+
+<button type="submit">
+Track
+</button>
+
+</form>
+
+{% if order %}
+
+<hr>
+
+<h2>Order Details</h2>
+
+<p><b>Order ID :</b> {{ order[1] }}</p>
+
+<p><b>Customer :</b> {{ order[2] }}</p>
+
+<p><b>Product :</b> {{ order[5] }}</p>
+
+<p><b>Status :</b> {{ order[9] }}</p>
+
+{% endif %}
+
+</div>
+
+</body>
+
+</html>

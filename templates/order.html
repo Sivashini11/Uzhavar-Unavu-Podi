@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{{ product.name }}</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="order-container">
+
+    <div class="order-image">
+
+        <img src="{{ url_for('static', filename='images/' + product.image) }}">
+
+    </div>
+
+    <div class="order-details">
+
+        <h1>{{ product.name }}</h1>
+
+        <p>
+            Traditional Homemade Healthy Podi
+            <br>
+            No Preservatives
+        </p>
+
+        <form method="POST">
+
+            <h3>Customer Details</h3>
+
+            <label>Full Name</label>
+
+            <input
+            type="text"
+            name="name"
+            placeholder="Enter your name"
+            required>
+
+            <label>Phone Number</label>
+
+            <input
+            type="tel"
+            name="phone"
+            pattern="[0-9]{10}"
+            maxlength="10"
+            placeholder="Enter Mobile Number"
+            required>
+
+            <label>Address</label>
+
+            <textarea
+            name="address"
+            rows="4"
+            placeholder="Enter Delivery Address"
+            required></textarea>
+
+            <label>Select Weight</label>
+
+            <select
+            id="weight"
+            name="weight"
+            onchange="calculateTotal()">
+
+                {% for weight, price in product.prices.items() %}
+
+                <option
+                value="{{ weight }}"
+                data-price="{{ price }}">
+
+                    {{ weight }} g - ₹{{ price }}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <label>Quantity</label>
+
+            <input
+            type="number"
+            id="qty"
+            name="quantity"
+            value="1"
+            min="1"
+            onchange="calculateTotal()">
+
+            <h2>
+
+                Total :
+
+                <span id="total">
+
+                    ₹{{ product.prices["50"] }}
+
+                </span>
+
+            </h2>
+
+            <input
+            type="hidden"
+            id="amount"
+            name="amount"
+            value="{{ product.prices['50'] }}">
+
+            <br><br>
+            <button
+type="submit"
+formaction="/add-to-cart/{{ product.id }}"
+formmethod="POST">
+
+🛒 Add to Cart
+
+</button> 
+
+            <button type="submit">
+
+                Continue to Payment
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+function calculateTotal(){
+
+    let weight=document.getElementById("weight");
+
+    let price=parseInt(weight.options[weight.selectedIndex].dataset.price);
+
+    let qty=parseInt(document.getElementById("qty").value);
+
+    let total=price*qty;
+
+    document.getElementById("total").innerHTML="₹"+total;
+
+    document.getElementById("amount").value=total;
+
+}
+
+calculateTotal();
+
+</script>
+
+</body>
+
+</html>

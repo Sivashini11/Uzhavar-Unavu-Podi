@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home | Uzhavar Unavu Podi
+{% endblock %}
+
+{% block content %}
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <img src="{{ url_for('static', filename='images/hero.png') }}" alt="Hero Image">
+
+</section>
+
+<!-- ================= WHY CHOOSE US ================= -->
+
+<section class="why">
+
+    <h1>Why Choose Uzhavar Unavu Podi?</h1>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="icon">🌿</div>
+            <h3>100% Natural</h3>
+            <p>No Artificial Preservatives</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🥣</div>
+            <h3>Homemade</h3>
+            <p>Traditional Family Recipe</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🏅</div>
+            <h3>Premium Quality</h3>
+            <p>Fresh Ingredients Only</p>
+        </div>
+
+        <div class="card">
+            <div class="icon">🚚</div>
+            <h3>Fast Delivery</h3>
+            <p>Across Tamil Nadu</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+
+<section id="products">
+
+    <h1>Our Products</h1>
+
+    <div class="product-grid">
+
+        {% for product in products %}
+
+        <div class="product">
+
+            <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+
+            <h2>{{ product.name }}</h2>
+
+            <label>Select Weight</label>
+
+            <select class="weight-select"
+                    onchange="updatePrice(this)"
+                    data-prices='{{ product.prices | tojson }}'>
+
+                <option value="50">50 g</option>
+                <option value="100">100 g</option>
+                <option value="150">150 g</option>
+                <option value="200">200 g</option>
+                <option value="250">250 g</option>
+
+            </select>
+
+            <div class="quantity">
+
+                <button onclick="changeQty(this,-1)">−</button>
+
+                <span>1</span>
+
+                <button onclick="changeQty(this,1)">+</button>
+
+            </div>
+
+            <h2 class="price">
+
+                ₹{{ product.prices["50"] }}
+
+            </h2>
+
+        <div class="button-group">
+    <button class="cart-btn"
+            onclick="addToCart(
+                '{{ product.id }}',
+                '{{ product.name }}',
+                '{{ product.image }}'
+            )">
+        Add to Cart
+    </button>
+
+    <a href="/order/{{ product.id }}" class="order-btn">
+        Buy Now
+    </a>
+</div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<!-- ================= REVIEWS ================= -->
+
+<section class="reviews">
+
+    <h1>Customer Reviews</h1>
+
+    <div class="review-box">
+
+        <p>
+
+            ⭐⭐⭐⭐⭐
+
+            <br><br>
+
+            Very tasty and healthy podi. My whole family loved it.
+
+        </p>
+
+        <h4>- Happy Customer</h4>
+
+    </div>
+
+</section>
+<script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Payment | Uzhavar Unavu Podi</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="payment-container">
+
+    <h1>🌿 Complete Your Payment</h1>
+
+    <p>Please scan the QR Code using any UPI app.</p>
+
+    <img src="{{ url_for('static', filename='images/upi_qr.png') }}"
+         class="qr-image">
+
+    <h2>UPI ID</h2>
+
+    <div class="upi-box">
+        sivashini91@oksbi
+    </div>
+
+    <div class="apps">
+
+        <div class="app">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/Google_Pay_Logo.svg">
+            <p>Google Pay</p>
+        </div>
+
+        <div class="app">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg">
+            <p>PhonePe</p>
+        </div>
+
+        <div class="app">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Paytm_logo.png">
+            <p>Paytm</p>
+        </div>
+
+    </div>
+
+    <br>
+
+    <form action="/confirm-payment" method="POST">
+    <button type="submit" class="pay-btn">
+        I Have Completed Payment
+    </button>
+</form>
+
+</div>
+
+</body>
+
+</html>

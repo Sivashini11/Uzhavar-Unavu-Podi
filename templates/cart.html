@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Shopping Cart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<h1 style="text-align:center;">
+    🛒 Shopping Cart
+</h1>
+
+{% if cart %}
+
+<table border="1" width="90%" align="center" cellpadding="10">
+
+    <tr style="background:#2E7D32;color:white;">
+
+        <th>Product</th>
+        <th>Weight</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+        <th>Action</th>
+
+    </tr>
+
+    {% for item in cart %}
+
+    <tr>
+
+        <td>{{ item.name }}</td>
+
+        <td>{{ item.weight }} g</td>
+
+        <td>₹{{ item.price }}</td>
+
+        <td>
+
+            <a href="/decrease/{{ loop.index0 }}">
+                <button>-</button>
+            </a>
+
+            {{ item.quantity }}
+
+            <a href="/increase/{{ loop.index0 }}">
+                <button>+</button>
+            </a>
+
+        </td>
+
+        <td>
+            ₹{{ item.subtotal }}
+        </td>
+
+        <td>
+
+            <a href="/remove-item/{{ loop.index0 }}"></a>
+                <button style="background:red;color:white;">
+                    🗑 Remove
+                </button>
+            </a>
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<h2 style="text-align:center;margin-top:30px;">
+
+    Grand Total : ₹{{ total }}
+
+</h2>
+
+<div style="text-align:center;margin-top:30px;">
+
+    <a href="/checkout">
+
+        <button
+        style="
+        background:green;
+        color:white;
+        padding:15px 35px;
+        font-size:18px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;">
+
+        Proceed to Checkout
+
+        </button>
+
+    </a>
+
+</div>
+
+{% else %}
+
+<h2 style="text-align:center;">
+Your cart is empty.
+</h2>
+
+<div style="text-align:center;">
+
+<a href="/products">
+
+<button
+style="
+background:green;
+color:white;
+padding:15px 30px;
+border:none;
+border-radius:8px;
+cursor:pointer;">
+
+Continue Shopping
+
+</button>
+
+</a>
+
+</div>
+
+{% endif %}
+
+</body>
+
+</html>
