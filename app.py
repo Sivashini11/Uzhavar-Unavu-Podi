@@ -24,8 +24,8 @@ products = [
         "name": "Paruppu Podi",
         "image": "paruppu.png",
         "prices": {
-            "50": 30,
-            "100": 60,
+            "50": 1,
+            "100": 1,
             "150": 90,
             "200": 120,
             "250": 150
@@ -311,8 +311,8 @@ def payment_success():
 
     cur.execute("""
     INSERT INTO orders
-    (order_id,name,phone,address,product,weight,quantity,amount)
-    VALUES(?,?,?,?,?,?,?,?)
+    (order_id, customer_name, phone, address, product, weight, quantity, amount, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """,
     (
     order_id,
@@ -322,13 +322,17 @@ def payment_success():
     order["product"],
     order["weight"],
     order["quantity"],
-    order["amount"]
+    order["amount"],
+    "Paid"
     ))
 
     conn.commit()
+    print("Order Saved Successfully")
+    print(order)
     conn.close()
 
     session.pop("order", None)
+
     return redirect(f"/success/{order_id}")
 @app.route("/update-status/<int:id>", methods=["POST"])
 def update_status(id):
