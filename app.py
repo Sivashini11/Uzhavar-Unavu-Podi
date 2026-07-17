@@ -304,47 +304,32 @@ def payment_success():
 
         return "Payment Verification Failed"
 
-    conn = sqlite3.connect("database.db")
+    order_id = "UUP-" + uuid.uuid4().hex[:8].upper()
 
+    conn = sqlite3.connect("database.db")
     cur = conn.cursor()
 
     cur.execute("""
-
     INSERT INTO orders
-
     (order_id,name,phone,address,product,weight,quantity,amount)
-
     VALUES(?,?,?,?,?,?,?,?)
-
     """,
-
     (
-
-        "UUP-"+uuid.uuid4().hex[:8].upper(),
-
-        order["name"],
-
-        order["phone"],
-
-        order["address"],
-
-        order["product"],
-
-        order["weight"],
-
-        order["quantity"],
-
-        order["amount"]
-
+    order_id,
+    order["name"],
+    order["phone"],
+    order["address"],
+    order["product"],
+    order["weight"],
+    order["quantity"],
+    order["amount"]
     ))
 
     conn.commit()
-
     conn.close()
 
-    session.pop("order",None)
-
-    return redirect(f"/success/{order['order_id']}")
+    session.pop("order", None)
+    return redirect(f"/success/{order_id}")
 @app.route("/update-status/<int:id>", methods=["POST"])
 def update_status(id):
 
