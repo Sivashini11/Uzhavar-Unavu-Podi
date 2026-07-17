@@ -1,7 +1,9 @@
 import razorpay
 import os
-import sqlite3
+from db import get_db
 import uuid
+import psycopg2
+from invoice import generate_invoice
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from flask import send_file
@@ -162,7 +164,7 @@ def admin():
     search = request.args.get("search", "")
     status = request.args.get("status", "All")
 
-    conn = sqlite3.connect("database.db")
+    conn = get_db()
     cursor = conn.cursor()
 
     query = "SELECT * FROM orders WHERE 1=1"
@@ -304,9 +306,13 @@ def payment_success():
 
         return "Payment Verification Failed"
 
-    order_id = "UUP-" + uuid.uuid4().hex[:8].upper()
+    order["order_id"] = "UUP-" + uuid.uuid4().hex[:8].upper()
 
-    conn = sqlite3.connect("database.db")
+    invoice_path = generate_invoice(order)
+
+    session.pop("order", None)
+
+    conn = get_db()
     cur = conn.cursor()
 
     cur.execute("""
@@ -339,7 +345,7 @@ def update_status(id):
 
     status = request.form["status"]
 
-    conn = sqlite3.connect("database.db")
+    conn = get_db()
     cursor = conn.cursor()
 
     cursor.execute(
@@ -354,7 +360,7 @@ def update_status(id):
 @app.route("/delete-order/<int:id>", methods=["POST"])
 def delete_order(id):
 
-    conn = sqlite3.connect("database.db")
+    conn = get_db()
     cursor = conn.cursor()
 
     cursor.execute("DELETE FROM orders WHERE id=?", (id,))
@@ -366,7 +372,7 @@ def delete_order(id):
 @app.route("/invoice/<int:id>")
 def invoice(id):
 
-    conn = sqlite3.connect("database.db")
+    conn = get_db()
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM orders WHERE id=?", (id,))
@@ -413,7 +419,7 @@ def track():
 
         order_id = request.form["order_id"]
 
-        conn = sqlite3.connect("database.db")
+        conn = get_db()
         cursor = conn.cursor()
 
         cursor.execute("SELECT * FROM orders WHERE order_id=?", (order_id,))
@@ -477,5 +483,11 @@ def success(order_id):
         order_id=order_id
     )
     return redirect(f"/success/{order['order_id']}")
+@app.route("/download-invoice/<order_id>")
+def download_invoice(order_id):
+    return send_file(
+        f"invoices/{order_id}.pdf",
+        as_attachment=True
+    )
 if __name__ == "__main__":
     app.run(debug=True)
