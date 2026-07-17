@@ -1,6 +1,5 @@
 import razorpay
 import os
-import os
 import sqlite3
 import uuid
 from reportlab.platypus import SimpleDocTemplate, Paragraph
@@ -9,11 +8,10 @@ from flask import send_file
 from flask import Flask, render_template, request, redirect, session
 app = Flask(__name__)
 app.secret_key = "uzhavar_unavu_podi_2026"
-
 client = razorpay.Client(
     auth=(
-        os.getenv("RAZORPAY_KEY_ID"),
-        os.getenv("RAZORPAY_KEY_SECRET")
+        "rzp_live_TEFImfUGcLzBQ7",
+        "hGmzCpNm45Ff5wVHMFbezvfx"
     )
 )
 # -------------------------
@@ -257,17 +255,96 @@ def payment():
 
     if "order" not in session:
         return redirect("/")
+    order = session["order"]
 
-    return render_template("payment.html")
-@app.route("/confirm-payment", methods=["POST"])
-def confirm_payment():
+    amount = int(float(order["amount"]) * 100)
 
-    # For now, just redirect to success.
-    # Later we will save the order here and send WhatsApp.
+    razorpay_order = client.order.create({
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": 1
+    })
 
-    order_id = "UUP-" + uuid.uuid4().hex[:8].upper()
+    order["razorpay_order_id"] = razorpay_order["id"]
 
-    return redirect(f"/success/{order_id}")
+    session["order"] = order
+
+    return render_template(
+    "payment.html",
+    order=order,
+    razorpay_order_id=razorpay_order["id"],
+    razorpay_key="rzp_live_TEFImfUGcLzBQ7"
+)
+@app.route("/payment-success")
+def payment_success():
+
+    payment_id = request.args.get("payment_id")
+
+    razor_order = request.args.get("order_id")
+
+    signature = request.args.get("signature")
+
+    order = session.get("order")
+
+    params = {
+
+        "razorpay_order_id": razor_order,
+
+        "razorpay_payment_id": payment_id,
+
+        "razorpay_signature": signature
+
+    }
+
+    try:
+
+        client.utility.verify_payment_signature(params)
+
+    except:
+
+        return "Payment Verification Failed"
+
+    conn = sqlite3.connect("database.db")
+
+    cur = conn.cursor()
+
+    cur.execute("""
+
+    INSERT INTO orders
+
+    (order_id,name,phone,address,product,weight,quantity,amount)
+
+    VALUES(?,?,?,?,?,?,?,?)
+
+    """,
+
+    (
+
+        "UUP-"+uuid.uuid4().hex[:8].upper(),
+
+        order["name"],
+
+        order["phone"],
+
+        order["address"],
+
+        order["product"],
+
+        order["weight"],
+
+        order["quantity"],
+
+        order["amount"]
+
+    ))
+
+    conn.commit()
+
+    conn.close()
+
+    session.pop("order",None)
+
+    return redirect(f"/success/{order['order_id']}")
 @app.route("/update-status/<int:id>", methods=["POST"])
 def update_status(id):
 
@@ -404,46 +481,6 @@ def clear_cart():
     session["cart"] = []
 
     return redirect("/cart")
-@app.route("/payment-complete", methods=["POST"])
-def payment_complete():
-
-    order = session.get("order")
-
-    if not order:
-        return redirect("/")
-
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    INSERT INTO orders
-    (order_id,
-    customer_name,
-    phone,
-    address,
-    product,
-    weight,
-    quantity,
-    amount,
-    status)
-
-    VALUES(?,?,?,?,?,?,?,?, ?)
-    """,(
-    order["order_id"],
-    order["name"],
-    order["phone"],
-    order["address"],
-    order["product"],
-    order["weight"],
-    order["quantity"],
-    order["amount"],
-    "Pending"
-))
-
-    conn.commit()
-    conn.close()
-
-    session.pop("order", None)
 @app.route("/success/<order_id>")
 def success(order_id):
     return render_template(

@@ -1,66 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Payment | Uzhavar Unavu Podi</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
+<title>Payment</title>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 </head>
 
 <body>
 
-<div class="payment-container">
+<h2>Complete Payment</h2>
 
-    <h1>🌿 Complete Your Payment</h1>
+<p>Amount : ₹{{ order.amount }}</p>
 
-    <p>Please scan the QR Code using any UPI app.</p>
+<button id="pay-btn">
 
-    <img src="{{ url_for('static', filename='images/upi_qr.png') }}"
-         class="qr-image">
-
-    <h2>UPI ID</h2>
-
-    <div class="upi-box">
-        sivashini91@oksbi
-    </div>
-
-    <div class="apps">
-
-        <div class="app">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/Google_Pay_Logo.svg">
-            <p>Google Pay</p>
-        </div>
-
-        <div class="app">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg">
-            <p>PhonePe</p>
-        </div>
-
-        <div class="app">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Paytm_logo.png">
-            <p>Paytm</p>
-        </div>
-
-    </div>
-
-    <br>
-
-    <form action="/confirm-payment" method="POST">
-<a href="/payment-complete">
-
-<button>
-
-✅ I HAVE COMPLETED PAYMENT
+Pay Now
 
 </button>
 
-</a>
-</form>
+<script>
 
-</div>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+var options = {
+
+key: "{{ razorpay_key }}",
+
+amount: "{{ order.amount * 100 }}",
+
+currency: "INR",
+
+name: "Uzhavar Unavu Podi",
+
+description: "{{ order.product }}",
+
+order_id: "{{ razorpay_order_id }}",
+
+handler: function(response){
+
+window.location.href="/payment-success?payment_id="+response.razorpay_payment_id+
+"&order_id="+response.razorpay_order_id+
+"&signature="+response.razorpay_signature;
+
+},
+
+theme: {
+
+color:"#2E7D32"
+
+}
+
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById("pay-btn").onclick=function(e){
+
+rzp.open();
+
+e.preventDefault();
+
+}
+
+</script>
+
 </body>
 
 </html>
