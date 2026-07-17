@@ -281,36 +281,28 @@ def payment():
 def payment_success():
 
     payment_id = request.args.get("payment_id")
-
     razor_order = request.args.get("order_id")
-
     signature = request.args.get("signature")
 
     order = session.get("order")
 
     params = {
-
         "razorpay_order_id": razor_order,
-
         "razorpay_payment_id": payment_id,
-
         "razorpay_signature": signature
-
     }
 
     try:
-
         client.utility.verify_payment_signature(params)
-
     except:
-
         return "Payment Verification Failed"
 
-    order["order_id"] = "UUP-" + uuid.uuid4().hex[:8].upper()
+    # Create Order ID
+    order_id = "UUP-" + uuid.uuid4().hex[:8].upper()
+    order["order_id"] = order_id
 
-    invoice_path = generate_invoice(order)
-
-    session.pop("order", None)
+    # Generate Invoice
+    generate_invoice(order)
 
     conn = get_db()
     cur = conn.cursor()
@@ -321,20 +313,18 @@ def payment_success():
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """,
     (
-    order_id,
-    order["name"],
-    order["phone"],
-    order["address"],
-    order["product"],
-    order["weight"],
-    order["quantity"],
-    order["amount"],
-    "Paid"
+        order_id,
+        order["name"],
+        order["phone"],
+        order["address"],
+        order["product"],
+        order["weight"],
+        order["quantity"],
+        order["amount"],
+        "Paid"
     ))
 
     conn.commit()
-    print("Order Saved Successfully")
-    print(order)
     conn.close()
 
     session.pop("order", None)
