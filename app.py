@@ -304,6 +304,7 @@ def payment_success():
     # Generate Invoice
     generate_invoice(order)
 
+
     conn = get_db()
     cur = conn.cursor()
 
@@ -478,6 +479,55 @@ def download_invoice(order_id):
     return send_file(
         f"invoices/{order_id}.pdf",
         as_attachment=True
+    )
+from urllib.parse import quote
+
+@app.route("/whatsapp/<order_id>")
+def whatsapp(order_id):
+
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("""
+    SELECT customer_name, phone, address, product, weight, quantity, amount
+    FROM orders
+    WHERE order_id=%s
+    """, (order_id,))
+
+    row = cur.fetchone()
+
+    conn.close()
+
+    if not row:
+        return "Order not found"
+
+    customer_name, phone, address, product, weight, quantity, amount = row
+
+    YOUR_NUMBER = "917708067811"   # Replace with your WhatsApp number
+
+    message = f"""
+🌿 New Order Received
+
+Order ID: {order_id}
+
+Customer: {customer_name}
+
+Phone: {phone}
+
+Product: {product}
+
+Weight: {weight}
+
+Quantity: {quantity}
+
+Amount: ₹{amount}
+
+Address:
+{address}
+"""
+
+    return redirect(
+        f"https://wa.me/{YOUR_NUMBER}?text={quote(message)}"
     )
 if __name__ == "__main__":
     app.run(debug=True)
