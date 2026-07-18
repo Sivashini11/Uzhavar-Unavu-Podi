@@ -310,7 +310,7 @@ def payment_success():
     cur.execute("""
     INSERT INTO orders
     (order_id, customer_name, phone, address, product, weight, quantity, amount, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
     """,
     (
         order_id,
