@@ -10,95 +10,55 @@
     <style>
 
         body{
-
-            font-family:Arial,sans-serif;
-
-            background:#f5f5f5;
-
-            text-align:center;
-
-            margin:0;
-
-            padding:0;
-
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            text-align: center;
+            margin: 0;
+            padding: 0;
         }
 
         .box{
-
-            width:500px;
-
-            margin:70px auto;
-
-            background:white;
-
-            padding:40px;
-
-            border-radius:15px;
-
-            box-shadow:0 0 20px rgba(0,0,0,.15);
-
+            width: 500px;
+            margin: 70px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,.15);
         }
 
         h1{
-
-            color:#2E7D32;
-
+            color: #2E7D32;
         }
 
         h2{
-
-            color:#444;
-
+            color: #444;
         }
 
         p{
-
-            font-size:18px;
-
+            font-size: 18px;
         }
 
         .btn{
-
-            display:block;
-
-            width:280px;
-
-            margin:15px auto;
-
-            padding:15px;
-
-            text-decoration:none;
-
-            color:white;
-
-            border-radius:8px;
-
-            font-size:18px;
-
+            display: block;
+            width: 280px;
+            margin: 15px auto;
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            border-radius: 8px;
+            font-size: 18px;
         }
 
         .invoice{
-
-            background:#1976D2;
-
-        }
-
-        .whatsapp{
-
-            background:#25D366;
-
+            background: #1976D2;
         }
 
         .shop{
-
-            background:#2E7D32;
-
+            background: #2E7D32;
         }
 
         .btn:hover{
-
-            opacity:.9;
-
+            opacity: .9;
         }
 
     </style>
@@ -109,32 +69,23 @@
 
 <div class="box">
 
-<h1>🎉 Payment Successful</h1>
+    <h1>🎉 Payment Successful</h1>
 
-<h2>🌿 Uzhavar Unavu Podi</h2>
+    <h2>🌿 Uzhavar Unavu Podi</h2>
 
-<p><b>Your Order Has Been Confirmed</b></p>
+    <p><b>Your Order Has Been Confirmed</b></p>
 
-<h2>{{ order_id }}</h2>
+    <h2>{{ order_id }}</h2>
 
-<p>
-Thank you for shopping with us.
-</p>
+    <p>Thank you for shopping with us.</p>
 
-<a class="btn invoice"
-href="/download-invoice/{{ order_id }}">
-📄 Download Invoice
-</a>
+    <a class="btn invoice" href="/download-invoice/{{ order_id }}">
+        📄 Download Invoice
+    </a>
 
-<a class="btn whatsapp"
-href="/whatsapp/{{ order_id }}">
-💬 Send Order to WhatsApp
-</a>
-
-<a class="btn shop"
-href="/">
-🛒 Continue Shopping
-</a>
+    <a class="btn shop" href="/">
+        🛒 Continue Shopping
+    </a>
 
 </div>
 
