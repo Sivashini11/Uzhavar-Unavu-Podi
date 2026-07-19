@@ -303,7 +303,10 @@ def payment_success():
     order["order_id"] = order_id
 
     # Generate Invoice
-    generate_invoice(order)
+    # Generate Invoice
+    invoice_path = generate_invoice(order)
+
+# Automatically email the invoice
     send_invoice_to_owner(
     invoice_path,
     order
