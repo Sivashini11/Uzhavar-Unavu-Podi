@@ -56,8 +56,11 @@ Amount:
             filename=os.path.basename(invoice_path)
         )
 
-    with smtplib.SMTP_SSL("smtp.gmail.com",465) as smtp:
-
-        smtp.login(EMAIL,PASSWORD)
-
+try:
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as smtp:
+        smtp.login(EMAIL, PASSWORD)
         smtp.send_message(msg)
+
+    print("✅ Email sent successfully")
+except Exception as e:
+    print("❌ Email Error:", e) 
