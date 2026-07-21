@@ -302,16 +302,20 @@ def payment_success():
     order_id = "UUP-" + uuid.uuid4().hex[:8].upper()
     order["order_id"] = order_id
 
-    # Generate Invoice
-    # Generate Invoice
+    print("========== EMAIL START ==========")
+
     invoice_path = generate_invoice(order)
 
-# Automatically email the invoice
-    send_invoice_to_owner(
-    invoice_path,
-    order
-)
+    print("Invoice generated:", invoice_path)
 
+    try:
+        print("Calling send_invoice_to_owner()")
+        send_invoice_to_owner(invoice_path, order)
+        print("Email function completed")
+    except Exception as e:
+     print("EMAIL ERROR:", str(e))
+
+    print("========== EMAIL END ==========")
 
     conn = get_db()
     cur = conn.cursor()

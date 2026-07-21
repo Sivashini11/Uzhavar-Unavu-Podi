@@ -9,7 +9,7 @@ OWNER_EMAIL = "uzhavarunavupodi@gmail.com"
 
 
 def send_invoice_to_owner(invoice_path, order):
-
+    print("Inside send_invoice_to_owner()")
     msg = EmailMessage()
 
     msg["Subject"] = f"🛒 New Order - {order['order_id']}"
@@ -55,12 +55,17 @@ Amount:
             subtype="pdf",
             filename=os.path.basename(invoice_path)
         )
+print("Connecting to Gmail...")
 
 try:
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as smtp:
-        smtp.login(EMAIL, PASSWORD)
-        smtp.send_message(msg)
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=20) as smtp:
+        print("Connected")
 
-    print("✅ Email sent successfully")
+        smtp.login(EMAIL, PASSWORD)
+        print("Logged in")
+
+        smtp.send_message(msg)
+        print("Email sent successfully!")
+
 except Exception as e:
-    print("❌ Email Error:", e) 
+    print("SMTP ERROR:", e)
