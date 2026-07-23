@@ -252,6 +252,7 @@ def cart():
     )
 @app.route("/checkout", methods=["GET", "POST"])
 def checkout():
+ def generate_order_id():
 
     cart = session.get("cart", [])
 
