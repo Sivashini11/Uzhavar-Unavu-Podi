@@ -111,11 +111,18 @@ href="{{ url_for('static', filename='css/style.css') }}">
             value="{{ product.prices['50'] }}">
 
             <br><br>
-           
+            <button
+type="submit"
+formaction="/add-to-cart/{{ product.id }}"
+formmethod="POST">
+
+🛒 Add to Cart
+
+</button> 
 
             <button type="submit">
 
-                Buy Now
+                Continue to Payment
 
             </button>
 
