@@ -258,7 +258,7 @@ def checkout():
     if not cart:
         return redirect("/cart")
 
-    total = sum(item["subtotal"] for item in cart)
+    total = sum(item["price"] * item["quantity"] for item in cart)
 
     if request.method == "POST":
 
