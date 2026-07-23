@@ -250,9 +250,36 @@ def cart():
         cart=cart,
         total=total
     )
-@app.route("/checkout")
+@app.route("/checkout", methods=["GET", "POST"])
 def checkout():
-    return render_template("checkout.html")
+
+    cart = session.get("cart", [])
+
+    if not cart:
+        return redirect("/cart")
+
+    total = sum(item["subtotal"] for item in cart)
+
+    if request.method == "POST":
+
+        session["order"] = {
+            "order_id": generate_order_id(),
+            "name": request.form["name"],
+            "phone": request.form["phone"],
+            "address": request.form["address"],
+            "product": ", ".join(item["name"] for item in cart),
+            "weight": ", ".join(str(item["weight"]) for item in cart),
+            "quantity": sum(item["quantity"] for item in cart),
+            "amount": total
+        }
+
+        return redirect("/payment")
+
+    return render_template(
+        "checkout.html",
+        cart=cart,
+        total=total
+    )
 @app.route("/payment")
 def payment():
 

@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="UTF-8">
-
     <title>Checkout</title>
 
     <link rel="stylesheet"
@@ -20,13 +19,13 @@
 
     <div id="checkout-items"></div>
 
-    <h2>Total : ₹<span id="checkout-total">0</span></h2>
+    <h2>Total : ₹<span id="checkout-total">{{ total }}</span></h2>
 
     <hr>
 
     <h2>Customer Details</h2>
 
-    <form action="/payment"></form>
+    <form action="/checkout" method="POST">
 
         <input
             type="text"
@@ -48,13 +47,14 @@
         <input
             type="hidden"
             name="amount"
-            id="amount">
+            id="amount"
+            value="{{ total }}">
 
-      <form action="/payment">
-    <button type="submit">
-        Proceed to Payment
-    </button>
-</form>
+        <button type="submit">
+            Proceed to Payment
+        </button>
+
+    </form>
 
 </div>
 
